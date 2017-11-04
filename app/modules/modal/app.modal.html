@@ -1,0 +1,6 @@
+<ActionBar title="Controlador de temperatura THERMA" class="top-bar">
+</ActionBar>
+<StackLayout class="page" orientation="vertical">
+    <TextField hint="Set-point" #txtSetPoint keyboardType="number" [(ngModel)]="setPoint"></TextField>
+    <Button text="Enviar" #btnSend (tap)="close(setPoint)" class="btn-send" borderRadius="10" borderWidth="2" borderColor="white"></Button>
+</StackLayout>

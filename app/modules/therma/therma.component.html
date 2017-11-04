@@ -1,0 +1,68 @@
+<ActionBar title="Controlador de temperatura THERMA" class="top-bar">
+</ActionBar>
+<StackLayout class="page" orientation="vertical" backgroundColor="#CFD8DC">
+    <Button text="Conectar" #btnConnect (tap)="toggleConnection()" class="btn-connect" borderRadius="10" borderWidth="2" borderColor="white"></Button>
+    <GridLayout marginTop="60" columns="*,*" rows="*,*" width="300" height="100">
+        <Label text="Set-point:" col="0" row="0" horizontalAlignment="center" verticalAlignment="center" class="lbl-prompt"></Label>
+        <StackLayout orientation="vertical" (tap)="changeSp()" backgroundColor="black" col="1" row="0" borderRadius="10" borderWidth="2"
+            borderColor="white">
+            <Label [text]="spRead + '°C'" class="lbl-sp" textWrap="true"></Label>
+        </StackLayout>
+        <Label text="Temperatura:" col="0" row="1" horizontalAlignment="center" verticalAlignment="center" class="lbl-prompt"></Label>
+        <StackLayout orientation="vertical" backgroundColor="black" col="1" row="1" borderRadius="10" borderWidth="2" borderColor="white">
+            <Label #lblTemp class="lbl-temp" [text]="temperatura + '°C'" textWrap="true"></Label>
+        </StackLayout>
+    </GridLayout>
+
+    <RadRadialGauge title="Celsius" subtitle="°C">
+
+        <TitleStyle tkRadialGaugeTitleStyle textColor="gray" ios:textSize="12" ios:verticalOffset="30" android:verticalOffset="90"></TitleStyle>
+        <SubtitleStyle tkRadialGaugeSubtitleStyle textColor="gray"></SubtitleStyle>
+
+        <RadialScale tkRadialGaugeScales startAngle="135" sweepAngle="270" minimum="0" maximum="60" radius="0.6">
+
+            <ScaleStyle tkRadialScaleStyle majorTicksCount="7" minorTicksCount="9" lineThickness="0" labelsOffset="0.1" lineColor="gray"
+                labelsCount="7" ticksOffset="0"></ScaleStyle>
+
+            <RadialBarIndicator tkRadialScaleIndicators minimum="0" maximum="30" location="0.69">
+                <BarIndicatorStyle tkRadialBarIndicatorStyle fillColor="blue" barWidth="0.08"></BarIndicatorStyle>
+            </RadialBarIndicator>
+
+            <RadialBarIndicator tkRadialScaleIndicators minimum="30.05" maximum="60" location="0.69">
+                <BarIndicatorStyle tkRadialBarIndicatorStyle fillColor="red" barWidth="0.08"></BarIndicatorStyle>
+            </RadialBarIndicator>
+
+            <RadialNeedle #needle tkRadialScaleIndicators isAnimated="true" animationDuration="500">
+                <NeedleStyle tkRadialNeedleStyle length="0.5" android:topWidth="1" ios:topWidth="3" android:bottomWidth="8" ios:bottomWidth="3"></NeedleStyle>
+            </RadialNeedle>
+        
+        </RadialScale>
+
+    </RadRadialGauge>
+    <!--RadRadialGauge id="gaugeView" title="°C" row="0" margin="10">
+        <TitleStyle tkRadialGaugeTitleStyle textColor="black" ios:verticalOffset="20" android:verticalOffset="50"></TitleStyle>
+        <RadialScale tkRadialGaugeScales minimum="0" maximum="60" radius="0.90">
+            <ScaleStyle tkRadialScaleStyle majorTicksCount="7" minorTicksCount="9" lineThickness="0" labelsCount="7" ticksOffset="0"></ScaleStyle>
+
+            <RadialBarIndicator tkRadialScaleIndicators minimum="0" maximum="12" location="0.97">
+                <BarIndicatorStyle tkRadialBarIndicatorStyle fillColor="#dddddd"></BarIndicatorStyle>
+            </RadialBarIndicator>
+            <RadialBarIndicator tkRadialScaleIndicators minimum="12" maximum="24" location="0.97">
+                <BarIndicatorStyle tkRadialBarIndicatorStyle fillColor="#9DCA56"></BarIndicatorStyle>
+            </RadialBarIndicator>
+            <RadialBarIndicator tkRadialScaleIndicators minimum="24" maximum="36" location="0.97">
+                <BarIndicatorStyle tkRadialBarIndicatorStyle fillColor="#F0C44D"></BarIndicatorStyle>
+            </RadialBarIndicator>
+            <RadialBarIndicator tkRadialScaleIndicators minimum="36" maximum="48" location="0.97">
+                <BarIndicatorStyle tkRadialBarIndicatorStyle fillColor="#E27633"></BarIndicatorStyle>
+            </RadialBarIndicator>
+            <RadialBarIndicator tkRadialScaleIndicators minimum="48" maximum="60" location="0.97">
+                <BarIndicatorStyle tkRadialBarIndicatorStyle fillColor="#A7010E"></BarIndicatorStyle>
+            </RadialBarIndicator>
+
+            <RadialNeedle #needle tkRadialScaleIndicators isAnimated="true" animationDuration="500"-->
+    <!--NeedleStyle tkRadialNeedleStyle length="0.8" android:topWidth="8" android:bottomWidth="8" ios:topWidth="2" ios:bottomWidth="2"></NeedleStyle-->
+    <!--/RadialNeedle>
+        </RadialScale>
+    </RadRadialGauge-->
+</StackLayout>
