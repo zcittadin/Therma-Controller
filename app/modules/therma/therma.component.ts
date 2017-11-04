@@ -24,9 +24,10 @@ export class ThermaComponent implements AfterViewInit {
 
     scanRate;
     setPoint: number;
-    dataRead: number;
+    dataRead: any;
     spRead: number = 0;
     temperatura: number = 0;
+    private checkConnection: number = 0;
     private isConnected: boolean = false;
     private btnConnect: any;
     private needle: any;
@@ -80,11 +81,14 @@ export class ThermaComponent implements AfterViewInit {
     }
 
     public send() {
-        if (this.setPoint != null) {
-            if (!this.deviceCommandService.sendValue(this.setPoint)) {
-                TNSFancyAlert.showWarning("Atenção", "Desconectado do dispositivo.", "Voltar");
-            }
+        if (!this.isConnected) {
+            TNSFancyAlert.showWarning("Atenção", "Desconectado do dispositivo.", "Voltar");
             this.setPoint = null;
+            return;
+        }
+        else {
+            if (this.setPoint != null)
+                this.deviceCommandService.sendValue(this.setPoint);
         }
     }
 
@@ -101,22 +105,32 @@ export class ThermaComponent implements AfterViewInit {
             this.btnConnect.backgroundColor = this.connectedColor;
             this.isConnected = true;
             this.scanRate = setInterval(() => {
-                this.deviceCommandService.readValue();
-                this.dataRead = this.deviceCommandService.getTemperatura();
-                if (this.dataRead == null) {
-                    this.temperatura = 0;
-                    this.spRead = 0;
+                if (this.deviceCommandService.readValue()) {
+                    this.checkConnection = 0;
+                    this.dataRead = this.deviceCommandService.getTemperatura();
+                    if (this.dataRead == null) {
+                        this.temperatura = 0;
+                        this.spRead = 0;
+                    } else {
+                        if (this.dataRead.length > 4) {
+                            this.dataRead = null
+                            this.cancelConnection();
+                        }
+                        this.temperatura = this.convertToByteArray(this.dataRead[0], this.dataRead[1]);
+                        this.spRead = this.convertToByteArray(this.dataRead[2], this.dataRead[3]);
+                    }
+                    this.needle.value = this.temperatura;
                 } else {
-                    this.temperatura = this.convertToByteArray(this.dataRead[0], this.dataRead[1]);
-                    this.spRead = this.convertToByteArray(this.dataRead[2], this.dataRead[3]);
+                    this.checkConnection++;
+                    if (this.checkConnection > 3) {
+                        this.cancelConnection();
+                    }
                 }
-                this.needle.value = this.temperatura;
             }, 1000);
         });
     }
 
     private disconnect() {
-        console.log("Desconectando...");
         this.deviceCommandService.disconnectToDevice().then((device) => {
             if (device != null) {
                 clearTimeout(this.scanRate);
@@ -131,6 +145,18 @@ export class ThermaComponent implements AfterViewInit {
                 TNSFancyAlert.showError("Erro!", "Ocorreu uma falha ao tentar deconectar.", "Voltar");
             }
         });
+    }
+
+    private cancelConnection() {
+        clearTimeout(this.scanRate);
+        this.temperatura = 0;
+        this.spRead = 0;
+        this.needle.value = 0;
+        this.btnConnect.text = "Conectar";
+        this.btnConnect.backgroundColor = this.toConnectColor;
+        this.isConnected = false;
+        this.checkConnection = 0;
+        TNSFancyAlert.showError("Erro!", "O dispositivo não está mais respondendo.", "Voltar");
     }
 
     private convertToByteArray(highByte: number, lowByte: number): number {

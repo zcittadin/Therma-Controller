@@ -5,6 +5,7 @@ var bluetooth = require("nativescript-bluetooth");
 @Injectable()
 export class BluetoothService {
     bleDevicesAround: Array<BleDevice> = new Array;
+    connectionStatus: boolean = false;
 
     write(bluetoothMessage): void {
         console.log('Escrevendo valor: ' + JSON.stringify(bluetoothMessage));
@@ -13,10 +14,16 @@ export class BluetoothService {
             (error) => console.log("Erro ao escrever: " + error));
     }
 
-    notify(bluetoothMessage): void {
+    notify(bluetoothMessage): boolean {
         bluetooth.startNotifying(bluetoothMessage)
-            .then((result) => { },
-            (error) => console.log("Erro ao ler dispositivo: " + error));
+            .then((result) => {
+                this.connectionStatus = true;
+            },
+            (error) => {
+                console.log("Erro ao ler dispositivo: " + error);
+                this.connectionStatus = false;
+            });
+        return this.connectionStatus;
     }
 
     fixPermission(): void {

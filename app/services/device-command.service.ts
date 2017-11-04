@@ -5,6 +5,7 @@ import { BleDevice } from '../models/ble-device.model';
 @Injectable()
 export class DeviceCommandService {
     arduino: BleDevice;
+    private connectionStatus: boolean = false;
     private temperatura: number;
 
     constructor(private bluetoothService: BluetoothService) { }
@@ -58,9 +59,10 @@ export class DeviceCommandService {
         return true;
     }
 
-    readValue() {
+    readValue(): boolean {
         const updateMessage = this.getMessageRead(this.arduino.UUID);
-        this.bluetoothService.notify(updateMessage);
+        this.connectionStatus = this.bluetoothService.notify(updateMessage);
+        return this.connectionStatus;
     }
 
     getMessage(UUID: string, value: string): any {
